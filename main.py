@@ -1,4 +1,5 @@
 import pygame
+from Intro import intro
 
 
 class Menu:
@@ -80,7 +81,7 @@ if __name__ == '__main__':
     pygame.init()
     size = width, height = 800, 400
     screen = pygame.display.set_mode(size)
-
+    intro(screen)
     desk = Desk()
     menu = Menu()
     running = True
