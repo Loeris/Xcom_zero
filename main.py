@@ -79,9 +79,9 @@ class Desk:
 
 if __name__ == '__main__':
     pygame.init()
-    size = width, height = 800, 400
+    size = width, height = 1000, 500
     screen = pygame.display.set_mode(size)
-    # intro(screen)
+    intro(screen)
     desk = Desk()
     menu = Menu()
     running = True
