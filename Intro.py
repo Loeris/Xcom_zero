@@ -110,11 +110,11 @@ def intro(screen):
                              (width // 2 + border * 40, height // 2 - border * 10 + border // 2), border)  # E
             pygame.display.flip()
             pygame.time.wait(15)
-        """for i in s:
+        for i in s:
             screen.fill(pygame.Color('black'),
                         i)
-            pygame.display.flip()"""
-        """for i in range(255):
+            pygame.display.flip()
+        for i in range(255):
             screen.fill((i, i, i))
             pygame.display.flip()
-            pygame.time.wait(7)"""
+            pygame.time.wait(7)
