@@ -69,9 +69,6 @@ class Desk(Menu):
         super(Desk, self).__init__(w, h, le, t)
 
     def on_click(self, cell_cords):
-        print(cell_cords[1], cell_cords[0])
-        for i in self.data:
-            print(*i)
         cell = self.data[cell_cords[1]][cell_cords[0]]
         render_list.append((sprite_rect, cell))
 
