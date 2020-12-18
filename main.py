@@ -107,8 +107,7 @@ class Menu:
 class Table(Menu):
     def __init__(self, w, h, le, t):
         super(Table, self).__init__(w, h, le, t)
-        self.wsize = 2 * self.hsize
-        self.left = desk.left + desk.width * desk.wsize + border * 5
+        self.color = "red"
 
 
 class Desk(Menu):
@@ -154,13 +153,12 @@ class Desk(Menu):
             k = -1
         for i in range(top1, top2, k):
             screen.fill((255, 255, 255))  # цвет экрана
-            sprite(screen, left1, i)
             for func, left, top, cell in render_list:
                 func(screen, left, top)
             desk.render(screen)
             table.render(screen)
-            panel.render(screen)
-            pygame.time.wait(5)
+            sprite(screen, left1, i)
+            pygame.time.wait(2)
             pygame.display.flip()
         if left1 < left2:
             k = 1
@@ -168,13 +166,12 @@ class Desk(Menu):
             k = -1
         for i in range(left1, left2, k):
             screen.fill((255, 255, 255))  # цвет экрана
-            sprite(screen, i, top2)
             for func, left, top, cell in render_list:
                 func(screen, left, top)
             desk.render(screen)
             table.render(screen)
-            panel.render(screen)
-            pygame.time.wait(5)
+            sprite(screen, i, top2)
+            pygame.time.wait(2)
             pygame.display.flip()
         render_list.append((sprite, left2, top2, cell2))
 
@@ -187,12 +184,8 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     border = height // 80
     # intro(screen)
-    desk = Desk(7, 7, border * 8, border * 2)
-    table = Table(4, 6, border * 7, border * 2)
-    table.top += table.hsize
-    panel = Table(4, 1, border * 7, border * 2)
-    panel.color = "red"
-    panel.border *= 2
+    desk = Desk(12, 8, border * 8, border * 2)
+    table = Table(2, 2, border * 138, border * 2)
     running = True
     cell0 = desk.data[3][5]
     render_list.append((sprite_support, cell0[1][0], cell0[1][1], cell0))
@@ -207,6 +200,5 @@ if __name__ == '__main__':
             func(screen, left, top)
         desk.render(screen)
         table.render(screen)
-        panel.render(screen)
         pygame.display.flip()
     pygame.quit()
