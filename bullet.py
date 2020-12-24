@@ -1,5 +1,4 @@
 import pygame
-from pygame import *
 
 #Объявляем переменные
 WIN_WIDTH = 800 #Ширина создаваемого окна

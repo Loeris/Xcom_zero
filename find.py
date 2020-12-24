@@ -75,9 +75,5 @@ if __name__ == "__main__":
     print(*map, sep="\n")
     print()
     print(path, sep="\n")
-    path_2 = []
-    for i in path:
-        path_2.append((i[1], i[0]))
-    path = path_2
-    print(path, sep="\n")
+
 
