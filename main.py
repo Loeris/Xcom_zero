@@ -25,18 +25,21 @@ preset1 = [
 
 
 class Bullet:
-    def __init__(self, start, end, speed):
+    def __init__(self, start, end):
+        self.speed = 10
         self.start = start
         self.end = end
-        self.rect = img.get_rect()  # присваиваем картинке прямоугольник
-        self.rect.x = start[0]
-        self.rect.y = start[1]
+        self.left = start[0]
+        self.top = start[1]
+        self.rect = pygame.draw.circle(screen, "yellow",
+                                       (self.left + border * 5, self.top + border * 5),
+                                       border * 2)  # присваиваем пуле прямоугольник
         a = end[0] - start[0]  # для подсчета угла на который летит пуля
         b = end[1] - start[1]
-        c = ((a) ** 2 + (b) ** 2) ** 0.5
+        c = (a ** 2 + b ** 2) ** 0.5
         self.hit = False
-        self.dx = a / c * speed  # скорость по х
-        self.dy = b / c * speed  # скорость по y
+        self.dx = a / c * self.speed  # скорость по х
+        self.dy = b / c * self.speed  # скорость по y
 
     def move_bullet(self, list_target):
         self.rect.x = int(self.rect.x + self.dx)  # текущие координаты пули
@@ -44,9 +47,6 @@ class Bullet:
         for item in list_target:
             if item.colliderect(self.rect):  # colliderect = проверка пересечение двух прямоугольников
                 self.hit = True
-
-    def draw(self, screen):
-        con.draw(sprite_bullet, left, top)
 
     def isHit(self):
         return self.hit
@@ -129,12 +129,15 @@ class Desk(Menu):
         self.current_cell = None
 
     def on_click(self, cell_cords):
+        print(self.current_cell)
         cell = self.data[cell_cords[1]][cell_cords[0]]
         if self.current_cell is None and cell in (_[3] for _ in render_list):
             self.current_cell = cell
         elif self.current_cell is not None:
             sprite = render_list[[_[3] for _ in render_list].index(self.current_cell)][0]
+            self.data[self.current_cell[2][0]][self.current_cell[2][1]][0] = "e"
             self.move(sprite, self.find(self.current_cell[2], cell[2]))
+            self.data[cell[2][0]][cell[2][1]][0] = "s"
             self.current_cell = None
 
     def find(self, c1, c2):
@@ -188,13 +191,11 @@ class Connector:
                           buttons.data[0][0], buttons.data[1][0], buttons.data[2][0],
                           buttons.data[0][1], buttons.data[1][1], buttons.data[2][1]]
         self.key2_list = []
+        self.list_target = []
 
     def start(self):  # начальная расстановка спрайтов
         for j in range(len(desk.data)):
             for i in range(len(desk.data[j])):
-                desk.data[j][i][0] = preset1[j][i]
-        for j in range(len(preset1)):
-            for i in range(len(preset1[j])):
                 desk.data[j][i][0] = preset1[j][i]
         self.key2_list = [*table1.sprite_list, *table2.sprite_list,
                           sprite_shoot, sprite_move, sprite_map,
@@ -206,11 +207,11 @@ class Connector:
         for _ in range(len(self.key2_list)):
             cell0 = self.key1_list[_]
             render_list.append((self.key2_list[_], cell0[1][0], cell0[1][1], cell0))
+
         for _ in range(8):
             cell0 = sprite_list[_]
             render_list.append((self.key2_list[_], cell0[1][0], cell0[1][1], cell0))
-        for i in render_list:
-            print(*i)
+            desk.data[cell0[2][0]][cell0[2][1]][0] = "s"
 
     def draw(self, sprite, left, top):
         sprite(screen, left, top)
@@ -231,6 +232,12 @@ class Connector:
                     cell = buttons.get_cell(mouse_pos)
                     if cell is not None:
                         buttons.on_click(cell)
+        self.list_target = []
+        for j in range(len(desk.data)):
+            for i in range(len(desk.data[j])):
+                cell = desk.data[j][i]
+                if cell[0] in ("b", "B", "s"):
+                    self.list_target.append(pygame.Rect(screen, cell[1][0], cell[1][1], border * 10, border * 10))
 
     def render(self):
         screen.fill((255, 255, 255))  # цвет экрана
