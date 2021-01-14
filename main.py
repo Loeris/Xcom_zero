@@ -1,4 +1,3 @@
-from Intro import intro
 from Sprites import *
 import pygame
 from find import backward, fill_path
