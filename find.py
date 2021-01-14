@@ -27,7 +27,7 @@ def backward(map, start, end):  # ищем обратный путь
 
         list_range = sorted(list_range, key=lambda item: item[0])
 
-        y2, x2 = list_range[0][1]  # презаписываем значения самой дешовой соседней клетки
+        y2, x2 = list_range[0][1]  # презаписываем значения самой дешевой соседней клетки
 
     path.reverse()  # разворачивает список
     return path
@@ -46,7 +46,7 @@ def fill_path(map, start, end, cost):  # заполняем поля препя�
 
     if x1 < 0 or y1 < 0 or x1 >= col or y1 >= row:
         return
-    if map[y1][x1] == "b":
+    if map[y1][x1] in ("b", "B", "s"):  # изменино
         return
 
     if map[y1][x1] != "e" and cost >= map[y1][x1]:
@@ -75,5 +75,3 @@ if __name__ == "__main__":
     print(*map, sep="\n")
     print()
     print(path, sep="\n")
-
-
