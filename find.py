@@ -26,7 +26,8 @@ def backward(map, start, end):  # ищем обратный путь
             list_range.append((map[y2 + 1][x2], (y2 + 1, x2)))
 
         list_range = sorted(list_range, key=lambda item: item[0])
-
+        if len(list_range)<=0:
+            return []
         y2, x2 = list_range[0][1]  # презаписываем значения самой дешевой соседней клетки
 
     path.reverse()  # разворачивает список
