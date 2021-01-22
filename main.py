@@ -1,3 +1,4 @@
+from Intro import intro
 from Sprites import *
 import pygame
 from find import backward, fill_path
@@ -26,12 +27,12 @@ preset1 = [
 class Bullet:
     def __init__(self, start, end, size):
         self.speed = 5
-        self.start = start  # координаты откуда вылетает и куда летит пуля
+        self.start = start
         self.end = end
-        self.left = start[0]  # значение х стартовой точки
+        self.left = start[0]
         self.rect = pygame.Rect((start), (size, size))
-        self.img = pygame.Surface((size, size))  # отрисовка пули
-        self.top = start[1]  # значение у стартовой точки
+        self.img = pygame.Surface((size, size))
+        self.top = start[1]
         a = end[0] - start[0]  # для подсчета угла на который летит пуля
         b = end[1] - start[1]
         c = (a ** 2 + b ** 2) ** 0.5
@@ -40,7 +41,7 @@ class Bullet:
         self.dy = b / c * self.speed  # скорость по y
 
     def move_bullet(self, list_target):
-        self.rect.x = int(self.rect.x + self.dx)  # текущие координаты пули, dxскорость движения пули по оси
+        self.rect.x = int(self.rect.x + self.dx)  # текущие координаты пули
         self.rect.y = int(self.rect.y + self.dy)
         for item in list_target:
             target_rect = item.get_rect()
@@ -52,7 +53,7 @@ class Bullet:
         screen.blit(self.img, self.rect)
 
     # движет пулю и проверяет столкнулась она с чем или нет
-    def update(self, screen, list_target):  # запускает логику и графику пули
+    def update(self, screen, list_target):
         result = self.move_bullet(list_target)
         self.draw(screen)
         return result
@@ -140,38 +141,48 @@ class Desk(Menu):
         self.target_shot = None
         self.controler = controler
 
-    def kill_robots(self, item):  # уничтожение робота. item- в какого робота совершино поподание
+    def kill_robots(self, item):
         self.controler.kill_robots(item)
         self.remove(item)
 
-    def remove(self, item):  # замена робота на пустую ячейку
+    def clear(self):
+        self.target_shot = None
+        self.current_cell = None
+        self.btn.active = None
+
+    def remove(self, item):
         self.data[item.row][item.col] = ['e', (item.rect.x, item.rect.y), (item.row, item.col)]
 
     def on_click(self, cell_cords):
-        cell = self.data[cell_cords[1]][cell_cords[0]]  # в какую ячейку кликнули
-        if self.current_cell is None and cell[
-            0] == "s":  # and cell in (_[3] for _ in render_list): # если робот не выбран и нажатая ячейка содержит робота выбрать его
+        print(self.current_cell)
+        cell = self.data[cell_cords[1]][cell_cords[0]]
+        if self.current_cell is None and cell[0] == "s":  # and cell in (_[3] for _ in render_list):
             self.current_cell = cell
-        elif self.current_cell is not None and cell[
-            0] == "e":  # если робот выбран и кликнули в пустую ячейку перемещаем робота
-            # sprite = render_list[[_[3] for _ in render_list].index(self.current_cell)][0]
-            sprite = self.controler.robots_list[[_[3] for _ in self.controler.robots_list].index(self.current_cell)][0]
-            self.data[self.current_cell[2][0]][self.current_cell[2][1]][0] = "e"
-            self.move(sprite, self.find(self.current_cell[2], cell[2]))
-            self.data[cell[2][0]][cell[2][1]][0] = "s"
-            self.current_cell = None  # current_cell - выбранный робот
-        elif self.current_cell and self.btn.active == "shot":  # если действие выстрелить
+        elif self.current_cell and self.btn.active == "shot":
             self.target_shot = cell
             self.shot()
             self.target_shot = None
             self.current_cell = None
             self.btn.active = None
+        elif self.current_cell is not None and cell[0] == "e":
+            # sprite = render_list[[_[3] for _ in render_list].index(self.current_cell)][0]
+            sprite = self.controler.robots_list[[_[3] for _ in self.controler.robots_list].index(self.current_cell)][0]
+            self.data[self.current_cell[2][0]][self.current_cell[2][1]][0] = "e"
+            paht = self.find(self.current_cell[2], cell[2])
+            if len(paht) > 0:
+                self.move(sprite, paht)
+                self.data[cell[2][0]][cell[2][1]][0] = "s"
+            else:
+                self.data[self.current_cell[2][0]][self.current_cell[2][1]][0] = "s"
+            self.current_cell = None
 
     def find(self, c1, c2):
+        preset = [item[::] for item in preset1]
+
         for j in range(len(self.data)):
             for i in range(len(self.data[j])):
-                preset1[j][i] = self.data[j][i][0]
-        preset = preset1
+                preset[j][i] = self.data[j][i][0]
+
         x, y = c1
         c1 = (y, x)
         x, y = c2
@@ -179,14 +190,16 @@ class Desk(Menu):
         fill_path(preset, c1, c2, 0)
         return backward(preset, c2, c1)
 
-    def shot(self):  # создает пулю совершает выстрел
-        bullet = Bullet(self.current_cell[1], self.target_shot[1], border * 5)
-        self.controler.shot(bullet, self.current_cell)
+    def shot(self):
+        if self.current_cell[1] != self.target_shot[1]:
+            bullet = Bullet(self.current_cell[1], self.target_shot[1], border * 5)
+            self.controler.shot(bullet, self.current_cell)
 
-    def move(self, sprite, path):  # движение робота
-        # render_list.pop([_[3] for _ in render_list].index(self.current_cell))
-        robot = self.controler.robots_list.pop([_[3] for _ in self.controler.robots_list].index(
-            self.current_cell))  # сохраняю инфу о роботе, который пытаемся переместить
+    def move(self, sprite, path):
+        if len(path) <= 0:
+            return
+            # render_list.pop([_[3] for _ in render_list].index(self.current_cell))
+        robot = self.controler.robots_list.pop([_[3] for _ in self.controler.robots_list].index(self.current_cell))
         for _1 in range(len(path) - 1):
             c1 = path[_1]
             c2 = path[_1 + 1]
@@ -218,20 +231,23 @@ class Desk(Menu):
         self.controler.robots_list.append((sprite, left2, top2, cell2, robot[4]))
 
 
-class Cell:  # инфа о ячейке
+class Cell:
     def __init__(self, x, y, w, h, row, col, type_cell):
         self.rect = pygame.Rect((x, y), (w, h))
         self.type = type_cell
         self.row = row
         self.col = col
 
-    def get_rect(self):  # прямоугольник клетки
+    def get_rect(self):
         return self.rect
 
-    def get_cell(self):  # координаты клетки
+    def to_tuple(self):
+        return (self.type, (self.rect.x, self.rect.y), (self.row, self.col))
+
+    def get_cell(self):
         return (self.row, self.col)
 
-    def __str__(self):  # выводит на экран инфу о клетки строкой (нужен для отладки)
+    def __str__(self):
         return f"{self.rect}, {self.row}, {self.col}, {self.type}"
 
 
@@ -242,31 +258,36 @@ class Connector:
         self.robots_list = []
 
     def kill_robots(self, item):
-        self.robots_list = list(filter(lambda robot: robot[3][2] != item.get_cell(),
-                                       self.robots_list))  # удаляем не нужного(убитого) робота из списка
+        print('kill')
+        self.robots_list = list(filter(lambda robot: robot[3][2] != item.get_cell(), self.robots_list))
 
-    def init(self):  # инициализирует поля(поля = что именно где отрисовывать)
+    def init(self):
         self.key1_list = [table1.data[0][0], table1.data[0][1], table1.data[1][0], table1.data[1][1],
                           table2.data[0][0], table2.data[0][1], table2.data[1][0], table2.data[1][1],
                           buttons.data[0][0], buttons.data[1][0], buttons.data[2][0],
                           buttons.data[0][1], buttons.data[1][1], buttons.data[2][1]]
 
-    def shot(self, bullet, owner):  # отрисовка выстрела
+    def shot(self, bullet, owner):
         print("shot")
         list_target = []
         for j in range(len(desk.data)):
             for i in range(len(desk.data[j])):
                 cell = desk.data[j][i]
                 if cell[0] in ("b", "B", "s") and cell != owner:
-                    # pygame.Rect(cell[1], (border * 10, border * 10))
                     list_target.append(Cell(*cell[1], border * 10, border * 10, *cell[2], cell[0]))
         while True:
             self.render()
             target = bullet.update(screen, list_target)
+
             if target != None:
                 if target.type == 's':
                     if self.check_team(target.get_cell(), owner[2]):
                         desk.kill_robots(target)
+                break
+
+            if bullet.rect.x < 0 or bullet.rect.y < 0 or \
+                    bullet.rect.x > desk.data[0][-1][1][0] or \
+                    bullet.rect.y > desk.data[-1][-1][1][1]:
                 break
             pygame.display.update()
             pygame.time.wait(5)
@@ -279,9 +300,12 @@ class Connector:
         return True
 
     def start(self):  # начальная расстановка спрайтов
+        self.robots_list = []
+        desk.clear()
         for j in range(len(desk.data)):
             for i in range(len(desk.data[j])):
                 desk.data[j][i][0] = preset1[j][i]
+
         self.key2_list = [*table1.sprite_list, *table2.sprite_list,
                           sprite_shoot, sprite_move, sprite_map,
                           sprite_cancel, sprite_wait, sprite_restart]

@@ -37,7 +37,7 @@ def fill_path(map, start, end, cost):  # заполняем поля препя�
     x1, y1 = start
     x2, y2 = end
     if start == end:
-        if map[y1][x1] == "e" or map[y1][x1] > cost:
+        if map[y1][x1] == "e" or (type(map[y1][x1])==int and map[y1][x1] > cost):
             map[y1][x1] = cost
         return
 
