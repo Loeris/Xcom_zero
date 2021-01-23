@@ -2,6 +2,7 @@ from Intro import intro
 from Sprites import *
 import pygame
 from find import backward, fill_path
+import math
 
 pygame.init()
 preset0 = [
@@ -23,26 +24,25 @@ preset1 = [
     ['e', 'e', 'e', 'e', 'e', 'b', 'B', 'b', 'e', 'e', 'e', 'e', ],
     ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ]]
 
+vec = pygame.math.Vector2
+
 
 class Bullet:
     def __init__(self, start, end, size):
-        self.speed = 5
         self.start = start
         self.end = end
         self.left = start[0]
         self.rect = pygame.Rect((start), (size, size))
         self.img = pygame.Surface((size, size))
         self.top = start[1]
-        a = end[0] - start[0]  # для подсчета угла на который летит пуля
-        b = end[1] - start[1]
-        c = (a ** 2 + b ** 2) ** 0.5
-        self.hit = False
-        self.dx = a / c * self.speed  # скорость по х
-        self.dy = b / c * self.speed  # скорость по y
+        vs = vec(start)
+        ve = vec(end)
+        vmove = ve - vs
+        self.vSpeed = vmove / 50
+        print(f"vSpeed = {self.vSpeed} ")
 
     def move_bullet(self, list_target):
-        self.rect.x = int(self.rect.x + self.dx)  # текущие координаты пули
-        self.rect.y = int(self.rect.y + self.dy)
+        self.rect.center += self.vSpeed
         for item in list_target:
             target_rect = item.get_rect()
             if target_rect.colliderect(self.rect):  # colliderect = проверка пересечение двух прямоугольников
@@ -192,7 +192,10 @@ class Desk(Menu):
 
     def shot(self):
         if self.current_cell[1] != self.target_shot[1]:
-            bullet = Bullet(self.current_cell[1], self.target_shot[1], border * 5)
+            print("target", self.target_shot[1])
+            bullet = Bullet((self.current_cell[1][0] + self.wsize // 2, self.current_cell[1][1] + self.hsize // 2),
+                            (self.target_shot[1][0] + self.wsize // 2, self.target_shot[1][1] + self.hsize // 2),
+                            self.border * 10)
             self.controler.shot(bullet, self.current_cell)
 
     def move(self, sprite, path):
