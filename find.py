@@ -47,7 +47,7 @@ def fill_path(map, start, end, cost):  # заполняем поля препя�
 
     if x1 < 0 or y1 < 0 or x1 >= col or y1 >= row:
         return
-    if map[y1][x1] in ("b", "B", "s"):  # изменино
+    if map[y1][x1] in ("b", "B", "r"):  # изменино
         return
 
     if map[y1][x1] != "e" and cost >= map[y1][x1]:

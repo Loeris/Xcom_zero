@@ -2,27 +2,26 @@ from Intro import intro
 from Sprites import *
 import pygame
 from find import backward, fill_path
-import math
 
 pygame.init()
 preset0 = [
-    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ],
-    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ],
-    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ],
-    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ],
-    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ],
-    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ],
-    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ],
-    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ]]
+    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e'],
+    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e'],
+    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e'],
+    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e'],
+    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e'],
+    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e'],
+    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e'],
+    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e']]
 preset1 = [
-    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ],
-    ['e', 'e', 'e', 'e', 'b', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ],
-    ['e', 'b', 'B', 'B', 'b', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ],
-    ['e', 'B', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ],
-    ['e', 'b', 'B', 'B', 'B', 'b', 'e', 'e', 'e', 'e', 'e', 'e', ],
-    ['e', 'e', 'e', 'e', 'e', 'B', 'e', 'b', 'B', 'b', 'e', 'e', ],
-    ['e', 'e', 'e', 'e', 'e', 'b', 'B', 'b', 'e', 'e', 'e', 'e', ],
-    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', ]]
+    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e'],
+    ['e', 'e', 'e', 'e', 'b', 'e', 'e', 'e', 'e', 'e', 'e', 'e'],
+    ['e', 'b', 'B', 'B', 'b', 'e', 'e', 'e', 'e', 'e', 'e', 'e'],
+    ['e', 'B', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e'],
+    ['e', 'b', 'B', 'B', 'B', 'b', 'e', 'e', 'e', 'e', 'e', 'e'],
+    ['e', 'e', 'e', 'e', 'e', 'B', 'e', 'b', 'B', 'b', 'e', 'e'],
+    ['e', 'e', 'e', 'e', 'e', 'b', 'B', 'b', 'e', 'e', 'e', 'e'],
+    ['e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e']]
 
 vec = pygame.math.Vector2
 
@@ -32,15 +31,17 @@ class Bullet:
         self.start = start
         self.end = end
         self.left = start[0]
-        self.rect = pygame.Rect((start), (size, size))
+        self.rect = pygame.Rect(start, (size, size))
         self.img = pygame.Surface((size, size))
         self.top = start[1]
         vs = vec(start)
         ve = vec(end)
-        vmove = ve - vs
-        self.vSpeed = vmove / 50
+        vmove = (ve - vs)
+        if abs(vmove.x) > abs(vmove.y):  # Устанавливаем скорость пули
+            self.vSpeed = vec(9 * vmove.x / abs(vmove.x), 9 * vmove.y / abs(vmove.x))
+        else:
+            self.vSpeed = vec(9 * vmove.x / abs(vmove.y), 9 * vmove.y / abs(vmove.y))
         print(f"vSpeed = {self.vSpeed} ")
-
     def move_bullet(self, list_target):
         self.rect.center += self.vSpeed
         for item in list_target:
@@ -55,7 +56,7 @@ class Bullet:
     # движет пулю и проверяет столкнулась она с чем или нет
     def update(self, screen, list_target):
         result = self.move_bullet(list_target)
-        self.draw(screen)
+        con.draw(sprite_bullet, self.rect.x - 5 * border, self.rect.y - 5 * border)
         return result
 
 
@@ -102,7 +103,7 @@ class Buttons(Menu):
         self.active = None
 
     def on_click(self, cell_cords):
-        if cell_cords == (1, 2):
+        if cell_cords == (0, 1):
             con.start()
         elif cell_cords == (0, 0):
             self.active = "shot"
@@ -156,7 +157,7 @@ class Desk(Menu):
     def on_click(self, cell_cords):
         print(self.current_cell)
         cell = self.data[cell_cords[1]][cell_cords[0]]
-        if self.current_cell is None and cell[0] == "s":  # and cell in (_[3] for _ in render_list):
+        if self.current_cell is None and cell[0] == "r":  # and cell in (_[3] for _ in render_list):
             self.current_cell = cell
         elif self.current_cell and self.btn.active == "shot":
             self.target_shot = cell
@@ -171,9 +172,9 @@ class Desk(Menu):
             paht = self.find(self.current_cell[2], cell[2])
             if len(paht) > 0:
                 self.move(sprite, paht)
-                self.data[cell[2][0]][cell[2][1]][0] = "s"
+                self.data[cell[2][0]][cell[2][1]][0] = "r"
             else:
-                self.data[self.current_cell[2][0]][self.current_cell[2][1]][0] = "s"
+                self.data[self.current_cell[2][0]][self.current_cell[2][1]][0] = "r"
             self.current_cell = None
 
     def find(self, c1, c2):
@@ -230,7 +231,6 @@ class Desk(Menu):
                 con.draw(sprite, _, top2)
                 pygame.time.wait(5)
                 pygame.display.flip()
-        # render_list.append((sprite, left2, top2, cell2))
         self.controler.robots_list.append((sprite, left2, top2, cell2, robot[4]))
 
 
@@ -245,10 +245,10 @@ class Cell:
         return self.rect
 
     def to_tuple(self):
-        return (self.type, (self.rect.x, self.rect.y), (self.row, self.col))
+        return self.type, (self.rect.x, self.rect.y), (self.row, self.col)
 
     def get_cell(self):
-        return (self.row, self.col)
+        return self.row, self.col
 
     def __str__(self):
         return f"{self.rect}, {self.row}, {self.col}, {self.type}"
@@ -267,8 +267,7 @@ class Connector:
     def init(self):
         self.key1_list = [table1.data[0][0], table1.data[0][1], table1.data[1][0], table1.data[1][1],
                           table2.data[0][0], table2.data[0][1], table2.data[1][0], table2.data[1][1],
-                          buttons.data[0][0], buttons.data[1][0], buttons.data[2][0],
-                          buttons.data[0][1], buttons.data[1][1], buttons.data[2][1]]
+                          buttons.data[0][0], buttons.data[1][0]]
 
     def shot(self, bullet, owner):
         print("shot")
@@ -310,8 +309,7 @@ class Connector:
                 desk.data[j][i][0] = preset1[j][i]
 
         self.key2_list = [*table1.sprite_list, *table2.sprite_list,
-                          sprite_shoot, sprite_move, sprite_map,
-                          sprite_cancel, sprite_wait, sprite_restart]
+                          sprite_shoot, sprite_restart]
         global render_list
         render_list = []
         sprite_list = [(desk.data[2][0], 1), (desk.data[3][0], 1), (desk.data[4][0], 1), (desk.data[5][0], 1),
@@ -324,8 +322,7 @@ class Connector:
         for _ in range(8):
             cell0, team = sprite_list[_]
             self.robots_list.append((self.key2_list[_], cell0[1][0], cell0[1][1], cell0, team))
-            # render_list.append((self.key2_list[_], cell0[1][0], cell0[1][1], cell0))
-            desk.data[cell0[2][0]][cell0[2][1]][0] = "s"
+            desk.data[cell0[2][0]][cell0[2][1]][0] = "r"
 
     def draw(self, sprite, left, top):
         sprite(screen, left, top)
@@ -357,6 +354,7 @@ class Connector:
         table1.render(screen)  # рисуем окно выбора солдат 1 игрока
         table2.render(screen)  # рисуем окно выбора солдат 2 игрока
         buttons.render(screen)  # рисуем кнопки действия
+
         for j in range(desk.height):  # рисуем препятствия
             for i in range(desk.width):
                 if desk.data[j][i][0] == "b":
@@ -372,12 +370,15 @@ if __name__ == '__main__':
     size = width, height = 1000, 500
     screen = pygame.display.set_mode(size)
     border = height // 80
-    # intro(screen)
+    intro(screen)
     con = Connector()
-    buttons = Buttons(2, 3, border * 138, border * 44)
+    buttons = Buttons(1, 2, border * 138, border * 44)
+    buttons.wsize *= 2
     desk = Desk(12, 8, border * 8, border * 2, buttons, con)
     table1 = Table(2, 2, border * 138, border * 2)
+    table1.sprite_list = [sprite_support, sprite_support, sprite_support, sprite_support]
     table2 = Table(2, 2, border * 138, border * 23)
+    table2.sprite_list = [sprite_sniper, sprite_sniper, sprite_sniper, sprite_sniper]
     con.init()
 
     running = True
