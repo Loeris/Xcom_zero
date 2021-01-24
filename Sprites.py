@@ -52,13 +52,13 @@ def sprite_swall(screen, left, top):
     b = (210, 210, 210)
     s = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, c, 0, 0, 0, 0, 0, 0, c, 0],
-        [0, c, c, 0, 0, 0, 0, c, c, 0],
-        [0, c, c, c, 0, 0, c, c, c, 0],
-        [0, c, c, c, c, c, c, c, c, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, c, c, c, c, 0, 0, 0],
+        [0, 0, c, c, b, b, c, c, 0, 0],
         [0, c, c, b, b, b, b, c, c, 0],
         [0, c, c, b, b, b, b, c, c, 0],
-        [0, c, c, c, b, b, c, c, c, 0],
+        [0, c, c, b, b, b, b, c, c, 0],
         [0, c, c, c, c, c, c, c, c, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
     for j in range(len(s)):
@@ -87,7 +87,91 @@ def sprite_shoot(screen, left, top):
         for i in range(len(s[j])):
             if s[j][i] != 0:
                 pygame.draw.rect(screen, s[j][i],
-                                 ((left + border * (i + 5), top + border * j),
+                                 ((left + border * i, top + border * j),
+                                  (border, border)))
+
+def sprite_move(screen, left, top):
+    border = screen.get_height() // 80
+    c = "green"
+    s = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, c, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, c, c, 0, 0],
+        [0, c, c, c, c, c, c, c, c, 0],
+        [0, c, c, c, c, c, c, c, c, 0],
+        [0, 0, 0, 0, 0, 0, c, c, 0, 0],
+        [0, 0, 0, 0, 0, 0, c, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    for j in range(len(s)):
+        for i in range(len(s[j])):
+            if s[j][i] != 0:
+                pygame.draw.rect(screen, s[j][i],
+                                 ((left + border * i, top + border * j),
+                                  (border, border)))
+
+def sprite_cancel(screen, left, top):
+    border = screen.get_height() // 80
+    c = "green"
+    s = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, c, c, 0, 0, 0, 0, c, c, 0],
+        [0, c, c, c, 0, 0, c, c, c, 0],
+        [0, 0, c, c, c, c, c, c, 0, 0],
+        [0, 0, 0, c, c, c, c, 0, 0, 0],
+        [0, 0, 0, c, c, c, c, 0, 0, 0],
+        [0, 0, c, c, c, c, c, c, 0, 0],
+        [0, c, c, c, 0, 0, c, c, c, 0],
+        [0, c, c, 0, 0, 0, 0, c, c, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    for j in range(len(s)):
+        for i in range(len(s[j])):
+            if s[j][i] != 0:
+                pygame.draw.rect(screen, s[j][i],
+                                 ((left + border * i, top + border * j),
+                                  (border, border)))
+
+def sprite_wait(screen, left, top):
+    border = screen.get_height() // 80
+    c = "green"
+    s = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, c, c, 0, c, c, 0, c, c, 0],
+        [0, c, c, 0, c, c, 0, c, c, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    for j in range(len(s)):
+        for i in range(len(s[j])):
+            if s[j][i] != 0:
+                pygame.draw.rect(screen, s[j][i],
+                                 ((left + border * i, top + border * j),
+                                  (border, border)))
+
+def sprite_map(screen, left, top):
+    border = screen.get_height() // 80
+    c = "green"
+    s = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, c, c, c, c, c, c, c, c, 0],
+        [0, c, 0, 0, 0, 0, 0, 0, c, 0],
+        [0, c, 0, 0, 0, 0, 0, 0, c, 0],
+        [0, c, 0, c, 0, c, 0, 0, c, 0],
+        [0, c, 0, 0, c, 0, 0, 0, c, 0],
+        [0, c, 0, c, 0, c, 0, 0, c, 0],
+        [0, c, 0, 0, 0, 0, 0, 0, c, 0],
+        [0, c, c, c, c, c, c, c, c, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    for j in range(len(s)):
+        for i in range(len(s[j])):
+            if s[j][i] != 0:
+                pygame.draw.rect(screen, s[j][i],
+                                 ((left + border * i, top + border * j),
                                   (border, border)))
 
 def sprite_restart(screen, left, top):
@@ -108,13 +192,13 @@ def sprite_restart(screen, left, top):
         for i in range(len(s[j])):
             if s[j][i] != 0:
                 pygame.draw.rect(screen, s[j][i],
-                                 ((left + border * (i + 5), top + border * j),
+                                 ((left + border * i, top + border * j),
                                   (border, border)))
 
 def sprite_bullet(screen, left, top):
     border = screen.get_height() // 80
-    b = (0, 0, 0)
-    pygame.draw.circle(screen, b,
+    c = "yellow"
+    pygame.draw.circle(screen, c,
                        (left + border * 5, top + border * 5), border * 2)
 
 
