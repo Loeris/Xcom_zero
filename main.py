@@ -1,5 +1,6 @@
 from Sprites import *
 import pygame
+from Intro import intro
 from find import backward, fill_path
 
 pygame.init()
@@ -110,8 +111,8 @@ class Table(Menu):
     def __init__(self, w, h, le, t):
         super(Table, self).__init__(w, h, le, t)
         self.color = "red"
-        self.sprite_circle = [sprite_heavy, sprite_sniper, sprite_support, sprite_ranger]
-        self.sprite_list = [sprite_sniper, sprite_sniper, sprite_ranger, sprite_ranger]
+        self.sprite_circle = [sprite_blue, sprite_red, sprite_green, sprite_orange]
+        self.sprite_list = []
 
     def on_click(self, cell_cords):
         num = [_[3] for _ in render_list].index(self.data[cell_cords[1]][cell_cords[0]])
@@ -365,13 +366,15 @@ if __name__ == '__main__':
     size = width, height = 1000, 500
     screen = pygame.display.set_mode(size)
     border = height // 80
-    # intro(screen)
+    intro(screen)
     con = Connector()
     buttons = Buttons(1, 2, border * 138, border * 44)
     buttons.wsize *= 2
     desk = Desk(12, 8, border * 8, border * 2, buttons, con)
     table1 = Table(2, 2, border * 138, border * 2)
+    table1.sprite_list = [sprite_green, sprite_green, sprite_green, sprite_green]
     table2 = Table(2, 2, border * 138, border * 23)
+    table2.sprite_list = [sprite_blue, sprite_blue, sprite_blue, sprite_blue]
     con.init()
 
     running = True

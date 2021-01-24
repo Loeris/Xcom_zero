@@ -118,29 +118,7 @@ def sprite_bullet(screen, left, top):
                        (left, top), border * 2)
 
 
-def sprite_alien(screen, left, top):
-    border = screen.get_height() // 80
-    c = "purple"
-    s = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, c, c, c, c, 0, 0, 0],
-        [0, 0, c, 0, c, c, 0, c, 0, 0],
-        [0, 0, c, c, c, c, c, c, 0, 0],
-        [0, 0, 0, c, 0, 0, c, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-    for j in range(len(s)):
-        for i in range(len(s[j])):
-            if s[j][i] != 0:
-                pygame.draw.rect(screen, s[j][i],
-                                 ((left + border * i, top + border * j),
-                                  (border, border)))
-
-
-def sprite_heavy(screen, left, top):
+def sprite_red(screen, left, top):
     border = screen.get_height() // 80
     z = (0, 0, 0)
     c = (213, 0, 0)
@@ -163,7 +141,7 @@ def sprite_heavy(screen, left, top):
                                   (border, border)))
 
 
-def sprite_sniper(screen, left, top):
+def sprite_blue(screen, left, top):
     border = screen.get_height() // 80
     z = (0, 0, 0)
     c = (3, 169, 244)
@@ -186,7 +164,7 @@ def sprite_sniper(screen, left, top):
                                   (border, border)))
 
 
-def sprite_ranger(screen, left, top):
+def sprite_orange(screen, left, top):
     border = screen.get_height() // 80
     z = (0, 0, 0)
     c = (255, 152, 0)
@@ -209,7 +187,7 @@ def sprite_ranger(screen, left, top):
                                   (border, border)))
 
 
-def sprite_support(screen, left, top):
+def sprite_green(screen, left, top):
     border = screen.get_height() // 80
     z = (0, 0, 0)
     c = (76, 175, 80)
@@ -223,29 +201,6 @@ def sprite_support(screen, left, top):
         [0, 0, 0, 0, z, z, 0, 0, 0, 0],
         [0, c, 0, z, 0, 0, z, 0, c, 0],
         [0, c, c, z, 0, 0, z, c, c, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-    for j in range(len(s)):
-        for i in range(len(s[j])):
-            if s[j][i] != 0:
-                pygame.draw.rect(screen, s[j][i],
-                                 ((left + border * i, top + border * j),
-                                  (border, border)))
-
-
-def sprite_common(screen, left, top):
-    border = screen.get_height() // 80
-    z = (0, 0, 0)
-    c = (158, 158, 158)
-    s = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, z, z, 0, 0, 0, 0],
-        [0, 0, 0, 0, z, z, 0, 0, 0, 0],
-        [0, 0, 0, z, c, c, z, 0, 0, 0],
-        [0, 0, z, 0, c, c, 0, z, 0, 0],
-        [0, 0, z, 0, c, c, 0, z, 0, 0],
-        [0, 0, 0, 0, z, z, 0, 0, 0, 0],
-        [0, 0, 0, z, 0, 0, z, 0, 0, 0],
-        [0, 0, 0, z, 0, 0, z, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
     for j in range(len(s)):
         for i in range(len(s[j])):
