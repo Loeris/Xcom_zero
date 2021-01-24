@@ -288,9 +288,9 @@ class Connector:
                         desk.kill_robots(target)
                 break
 
-            if bullet.rect.x < 0 or bullet.rect.y < 0 or \
-                    bullet.rect.x > desk.data[0][-1][1][0] or \
-                    bullet.rect.y > desk.data[-1][-1][1][1]:
+            if bullet.rect.right < 0 or bullet.rect.bottom < 0 or \
+                    bullet.rect.right > desk.data[0][-1][1][0] + desk.wsize or \
+                    bullet.rect.top > desk.data[-1][-1][1][1] + desk.hsize:
                 break
             pygame.display.update()
             pygame.time.wait(5)
