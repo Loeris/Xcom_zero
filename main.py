@@ -36,7 +36,10 @@ class Bullet:
         vs = vec(start)
         ve = vec(end)
         vmove = ve - vs
-        self.vSpeed = vmove / 50
+        if abs(vmove.x) > abs(vmove.y):
+            self.vSpeed = vec((9 * vmove.x / abs(vmove.x), 9 * vmove.y / abs(vmove.x)))
+        else:
+            self.vSpeed = vec((9 * vmove.x / abs(vmove.y), 9 * vmove.y / abs(vmove.y)))
         print(f"vSpeed = {self.vSpeed} ")
 
     def move_bullet(self, list_target):
@@ -47,13 +50,10 @@ class Bullet:
                 return item
         return None
 
-    def draw(self, screen):
-        screen.blit(self.img, self.rect)
-
     # движет пулю и проверяет столкнулась она с чем или нет
     def update(self, screen, list_target):
         result = self.move_bullet(list_target)
-        self.draw(screen)
+        con.draw(sprite_bullet, self.rect.x, self.rect.y)
         return result
 
 
@@ -100,7 +100,7 @@ class Buttons(Menu):
         self.active = None
 
     def on_click(self, cell_cords):
-        if cell_cords == (1, 2):
+        if cell_cords == (0, 1):
             con.start()
         elif cell_cords == (0, 0):
             self.active = "shot"
@@ -154,7 +154,7 @@ class Desk(Menu):
     def on_click(self, cell_cords):
         print(self.current_cell)
         cell = self.data[cell_cords[1]][cell_cords[0]]
-        if self.current_cell is None and cell[0] == "s":  # and cell in (_[3] for _ in render_list):
+        if self.current_cell is None and cell[0] == "r":  # and cell in (_[3] for _ in render_list):
             self.current_cell = cell
         elif self.current_cell and self.btn.active == "shot":
             self.target_shot = cell
@@ -169,9 +169,9 @@ class Desk(Menu):
             paht = self.find(self.current_cell[2], cell[2])
             if len(paht) > 0:
                 self.move(sprite, paht)
-                self.data[cell[2][0]][cell[2][1]][0] = "s"
+                self.data[cell[2][0]][cell[2][1]][0] = "r"
             else:
-                self.data[self.current_cell[2][0]][self.current_cell[2][1]][0] = "s"
+                self.data[self.current_cell[2][0]][self.current_cell[2][1]][0] = "r"
             self.current_cell = None
 
     def find(self, c1, c2):
@@ -199,7 +199,6 @@ class Desk(Menu):
     def move(self, sprite, path):
         if len(path) <= 0:
             return
-            # render_list.pop([_[3] for _ in render_list].index(self.current_cell))
         robot = self.controler.robots_list.pop([_[3] for _ in self.controler.robots_list].index(self.current_cell))
         for _1 in range(len(path) - 1):
             c1 = path[_1]
@@ -217,7 +216,7 @@ class Desk(Menu):
             for _ in range(top1, top2, k):
                 con.render()
                 con.draw(sprite, left1, _)
-                pygame.time.wait(5)
+                pygame.time.wait(1)
                 pygame.display.flip()
             if left1 < left2:
                 k = 1 * border // 3
@@ -226,9 +225,8 @@ class Desk(Menu):
             for _ in range(left1, left2, k):
                 con.render()
                 con.draw(sprite, _, top2)
-                pygame.time.wait(5)
+                pygame.time.wait(1)
                 pygame.display.flip()
-        # render_list.append((sprite, left2, top2, cell2))
         self.controler.robots_list.append((sprite, left2, top2, cell2, robot[4]))
 
 
@@ -265,8 +263,7 @@ class Connector:
     def init(self):
         self.key1_list = [table1.data[0][0], table1.data[0][1], table1.data[1][0], table1.data[1][1],
                           table2.data[0][0], table2.data[0][1], table2.data[1][0], table2.data[1][1],
-                          buttons.data[0][0], buttons.data[1][0], buttons.data[2][0],
-                          buttons.data[0][1], buttons.data[1][1], buttons.data[2][1]]
+                          buttons.data[0][0], buttons.data[1][0]]
 
     def shot(self, bullet, owner):
         print("shot")
@@ -274,14 +271,14 @@ class Connector:
         for j in range(len(desk.data)):
             for i in range(len(desk.data[j])):
                 cell = desk.data[j][i]
-                if cell[0] in ("b", "B", "s") and cell != owner:
+                if cell[0] in ("b", "B", "r") and cell != owner:
                     list_target.append(Cell(*cell[1], border * 10, border * 10, *cell[2], cell[0]))
         while True:
             self.render()
             target = bullet.update(screen, list_target)
 
             if target != None:
-                if target.type == 's':
+                if target.type == 'r':
                     if self.check_team(target.get_cell(), owner[2]):
                         desk.kill_robots(target)
                 break
@@ -308,8 +305,7 @@ class Connector:
                 desk.data[j][i][0] = preset1[j][i]
 
         self.key2_list = [*table1.sprite_list, *table2.sprite_list,
-                          sprite_shoot, sprite_move, sprite_map,
-                          sprite_cancel, sprite_wait, sprite_restart]
+                          sprite_shoot, sprite_restart]
         global render_list
         render_list = []
         sprite_list = [(desk.data[2][0], 1), (desk.data[3][0], 1), (desk.data[4][0], 1), (desk.data[5][0], 1),
@@ -322,8 +318,7 @@ class Connector:
         for _ in range(8):
             cell0, team = sprite_list[_]
             self.robots_list.append((self.key2_list[_], cell0[1][0], cell0[1][1], cell0, team))
-            # render_list.append((self.key2_list[_], cell0[1][0], cell0[1][1], cell0))
-            desk.data[cell0[2][0]][cell0[2][1]][0] = "s"
+            desk.data[cell0[2][0]][cell0[2][1]][0] = "r"
 
     def draw(self, sprite, left, top):
         sprite(screen, left, top)
@@ -372,7 +367,8 @@ if __name__ == '__main__':
     border = height // 80
     # intro(screen)
     con = Connector()
-    buttons = Buttons(2, 3, border * 138, border * 44)
+    buttons = Buttons(1, 2, border * 138, border * 44)
+    buttons.wsize *= 2
     desk = Desk(12, 8, border * 8, border * 2, buttons, con)
     table1 = Table(2, 2, border * 138, border * 2)
     table2 = Table(2, 2, border * 138, border * 23)
